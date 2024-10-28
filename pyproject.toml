@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "texas-turnout-scraper"
+version = "0.1.0"
+description = ""
+authors = ["John R. Eakin <johnreakin@gmail.com>"]
+readme = "README.md"
+packages = [{include = "texas_turnout_scraper", from = "src"}]
+
+[tool.poetry.dependencies]
+python = ">=3.10.5,<3.13"
+selenium = "^4.21.0"
+tomli = "^2.0.1"
+icecream = "^2.1.3"
+election_utils = { path = "/Users/johneakin/PyCharmProjects/election-utils", develop = true}
+pydantic = "^2.9.2"
+tomli-w = "^1.1.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
