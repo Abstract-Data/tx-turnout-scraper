@@ -3,9 +3,10 @@ from typing import Optional
 from pydantic.dataclasses import dataclass as pydantic_dataclass
 import selenium.common.exceptions
 from selenium import webdriver
-from selenium.webdriver.support.ui import Select
+from selenium.webdriver.support.ui import Select, WebDriverWait
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
 from time import sleep
 from datetime import datetime
 from pathlib import Path
@@ -70,6 +71,7 @@ class ScraperConfig:
         if not DOWNLOAD_FOLDER.exists():
             DOWNLOAD_FOLDER.mkdir(parents=True, exist_ok=True)
             ic("Download folder created: ", DOWNLOAD_FOLDER)
+        self.user_options['DOWNLOAD_FOLDER'] = DOWNLOAD_FOLDER
         return DOWNLOAD_FOLDER
 
 
@@ -186,8 +188,11 @@ class CreateScraper:
                                 config['FORMATTING']['NEW_DATE']
                             )
                         )
-
-                        _dropdown = Select(driver.find_element(By.ID, value=date_to_vote))
+                        # Wait for the dropdown to be clickable
+                        _dropdown_wait = WebDriverWait(driver, max_delay).until(
+                            EC.element_to_be_clickable((By.ID, date_to_vote))
+                        )
+                        _dropdown = Select(_dropdown_wait)
                         ic("Selected date dropdown: ", _date)
                         _dropdown.select_by_visible_text(_date)
                         ic("Selected date select visible text: ", _date)
